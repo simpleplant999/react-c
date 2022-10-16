@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { createContext, useContext, useEffect, useState } from "react";
+import "./App.css";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import privateRoutes from "./routes/private-routes";
+import Navbar from "./components/navbar/Navbar";
+
+export const AppContext = createContext();
 
 function App() {
+  const [routes, setRoutes] = useState(privateRoutes);
+  const [username, setUsername] = useState("cedlabrador");
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppContext.Provider value={{ username }}>
+        <BrowserRouter>
+          <Navbar />
+          <div className="p-4">
+            <Routes>
+              {routes.map((route) => {
+                return (
+                  <>
+                    <Route
+                      path={route.path}
+                      key={route.name}
+                      element={route.component}
+                    />
+                  </>
+                );
+              })}
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </AppContext.Provider>
     </div>
   );
 }
